@@ -7,6 +7,13 @@ const searchAnime = async (query) => {
   return res.data.results;
 };
 
+const getRandomAnime = async () => {
+  const res = await axios.get(
+    `https://anime-ten-nu.vercel.app/meta/anilist/random`
+  );
+  return res.data;
+};
+
 const getAnimeInfo = async (id) => {
   const res = await axios.get(
     `https://anime-ten-nu.vercel.app/meta/anilist/info/${id}`
@@ -16,34 +23,37 @@ const getAnimeInfo = async (id) => {
 
 const getTrendingAnime = async () => {
   const res = await axios.get(
-    `https://anime-ten-nu.vercel.app/meta/anilist/trending?perPage=20`
+    `https://anime-ten-nu.vercel.app/meta/anilist/trending?perPage=10`
   );
   return res.data.results;
 };
 
-const watchAnime = async (id) => {
+const watchAnime = async (id, resolution, selectedServer) => {
   const anime = {
     subtitle: null,
     watchUrl: "",
+    m3u8Result: null,
   };
   const res = await axios.get(
     `https://anime-ten-nu.vercel.app/anime/zoro/watch/${id}server=${selectedServer}`
   );
   const m3u8Url = res.data.sources[0].url;
   const engSub = res.data.subtitles.find((sub) => sub.lang === "English");
-  setSubtitle(engSub ? engSub.url : null);
+
   anime.subtitle = engSub ? engSub.url : null;
 
   const proxy = await axios.get(`http://localhost:8080/proxy?url=${m3u8Url}`);
 
   const result = parseM3U8(proxy.data);
-  setM3u8Result(result);
+  anime.m3u8Result = result;
   const defaultUrl = result.length > 1 ? result[1].url : result[0].url;
   const selectedUrl =
     result.find((r) => r.resolution.split("x")[1] === resolution)?.url ||
     defaultUrl;
 
   anime.watchUrl = selectedUrl ? `http://localhost:8080${selectedUrl}` : "";
+
+  return anime;
 };
 
 const parseM3U8 = (m3u8Text) => {

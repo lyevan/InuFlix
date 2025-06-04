@@ -1,8 +1,15 @@
+@font-face {
+  font-family: Squada;
+  src: url("../src/assets/SquadaOne-Regular.ttf");
+}
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #1DCD9F;
+  --color-primary: #1dcd9f;
   --color-secondary: #169976;
-  --color-background: #1E1E1E;
+  --color-background: #1e1e1e;
   --color-card: #222222;
+  --color-light-gray: #d9d9d9;
+
+  --font-squada: Squada, "sans-serif";
 }
