@@ -18,10 +18,8 @@ const NavBar = () => {
   return (
     <div
       className={clsx(
-        "flex items-center justify-between w-screen h-auto px-12 pt-6 sticky top-0 z-50 transition-all duration-75",
-        isScrolled
-          ? "bg-background/80 backdrop-blur shadow-md"
-          : "bg-transparent"
+        "box-border flex items-center justify-between w-full h-auto px-12 pt-6 sticky top-0 left-0 z-50 transition-all duration-75",
+        isScrolled ? "bg-background/80 backdrop-blur" : "bg-transparent"
       )}
     >
       {/* Image Logo */}
@@ -47,7 +45,7 @@ const NavBar = () => {
         <input
           type="text"
           placeholder="Search..."
-          className="ml-4 p-1 pl-4 rounded-2xl border-2 font-squada border-primary focus:outline-none focus:border-light-gray bg-transparent text-light-gray"
+          className="p-1 pl-4 rounded-2xl border-2 font-squada border-primary focus:outline-none focus:border-light-gray bg-transparent text-light-gray"
         />
         <Link to="/profile">
           <i

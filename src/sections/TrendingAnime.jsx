@@ -40,7 +40,7 @@ const TrendingAnime = () => {
       clearInterval(interval);
       clearTimeout(fadeTimeout);
     };
-  }, [trending.length]);
+  }, [trending.length, view]);
 
   if (trending.length === 0) {
     return <Loader />;
@@ -49,10 +49,10 @@ const TrendingAnime = () => {
   const currentAnime = trending[currentIndex];
 
   return (
-    <div className="relative max-h-[620px]">
+    <div className="relative max-h-[900px] w-screen overflow-hidden">
       <div
         className={clsx(
-          "transition-opacity duration-700 ease-in-out relative w-screen overflow-clip",
+          "transition-opacity duration-700 ease-in-out relative w-full overflow-hidden border-2 border-yellow-500",
           fade ? "opacity-100" : "opacity-0"
         )}
       >
@@ -62,9 +62,9 @@ const TrendingAnime = () => {
           loading="lazy"
           src={currentAnime.cover}
           alt={currentAnime.title?.english || currentAnime.title?.romaji}
-          className="w-full h-[500px] object-cover"
+          className="w-full h-[600px] object-cover"
         />
-        <div className="flex flex-row justify-center items-center">
+        <div className="flex flex-row justify-center items-center w-screen">
           <div className="absolute w-1/2 top-1/6 left-0 right-0 p-4 ml-6 h-[400px] text-white font-squada bg-background/10 border border-white/20 backdrop-blur-xs shadow-md rounded-lg shadow-background">
             <h2 className="text-6xl font-bold text-shadow-primary text-shadow-md mb-2 line-clamp-2">
               {currentAnime.title?.english || currentAnime.title?.romaji}
@@ -117,7 +117,7 @@ const TrendingAnime = () => {
           </div>
         </div>
       </div>
-      <div className="absolute ml-6 mb-4 flex flex-row gap-6 z-30 w-1/2 justify-center">
+      <div className="absolute bottom-0 ml-6 mb-4 flex flex-row gap-6 z-30 w-1/2 justify-center">
         {trending.map((anime, index) => {
           return (
             <button
@@ -135,9 +135,6 @@ const TrendingAnime = () => {
             ></button>
           );
         })}
-      </div>
-      <div className="flex w-screen justify-center absolute top-[550px]">
-        <Scroller />
       </div>
     </div>
   );
