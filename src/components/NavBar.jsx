@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
+import clsx from "clsx";
 import { Link } from "react-router";
 
 const NavBar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10); // adjust 50px threshold as needed
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="flex items-center justify-between w-screen px-4 pt-2 absolute top-0 left-0 z-50">
+    <div
+      className={clsx(
+        "flex items-center justify-between w-screen h-auto px-12 pt-6 sticky top-0 z-50 transition-all duration-75",
+        isScrolled
+          ? "bg-background/80 backdrop-blur shadow-md"
+          : "bg-transparent"
+      )}
+    >
       {/* Image Logo */}
       <Link to="/">
         <img src={logo} alt="Logo" className="h-12 mr-2" />
@@ -15,8 +34,8 @@ const NavBar = () => {
         <Link to="/explore">
           <h1 className="text-light-gray font-squada">Explore</h1>
         </Link>
-        <Link to="/genres">
-          <h1 className="text-light-gray font-squada">Genres ▾</h1>
+        <Link to="/recent">
+          <h1 className="text-light-gray font-squada">Recent</h1>
         </Link>
         <Link to="/schedules">
           <h1 className="text-light-gray font-squada">Schedules</h1>

@@ -3,7 +3,7 @@ import TrendingAnime from "../sections/TrendingAnime";
 
 const Home = () => {
   return (
-    <div className="">
+    <div>
       <TrendingAnime />
     </div>
   );
