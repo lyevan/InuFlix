@@ -10,6 +10,7 @@ const Loader = () => {
           <span className="bar" />
           <span className="bar" />
         </div>
+
       </StyledWrapper>
     </div>
   );

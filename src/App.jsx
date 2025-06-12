@@ -12,7 +12,7 @@ function App() {
         <NavBar />
         <Outlet />
         <div className="flex w-screen justify-center absolute top-[700px]">
-          <Scroller />
+          {/* <Scroller /> */}
         </div>
       </div>
     </>

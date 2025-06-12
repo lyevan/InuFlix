@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import clsx from "clsx";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router"; // make sure you're using `react-router-dom`
 
 const NavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10); // adjust 50px threshold as needed
+      setIsScrolled(window.scrollY > 10);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter" && query.trim()) {
+      navigate(`/search/${encodeURIComponent(query.trim())}`);
+    }
+  };
 
   return (
     <div
@@ -22,13 +30,13 @@ const NavBar = () => {
         isScrolled ? "bg-background/80 backdrop-blur" : "bg-transparent"
       )}
     >
-      {/* Image Logo */}
+      {/* Logo */}
       <Link to="/">
         <img src={logo} alt="Logo" className="h-12 mr-2" />
       </Link>
 
-      {/* Navigation Links */}
-      <div className="hidden sm:hidden md:flex lg:flex items-center justify-center gap-12  ">
+      {/* Nav Links */}
+      <div className="hidden sm:hidden md:flex lg:flex items-center justify-center gap-12">
         <Link to="/explore">
           <h1 className="text-light-gray font-squada">Explore</h1>
         </Link>
@@ -40,11 +48,14 @@ const NavBar = () => {
         </Link>
       </div>
 
-      {/* Search Bar and Profile */}
+      {/* Search + Profile */}
       <div className="flex items-center justify-center gap-4">
         <input
           type="text"
           placeholder="Search..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyPress}
           className="p-1 pl-4 rounded-2xl border-2 font-squada border-primary focus:outline-none focus:border-light-gray bg-transparent text-light-gray"
         />
         <Link to="/profile">

@@ -16,14 +16,14 @@ const getRandomAnime = async () => {
 
 const getAnimeInfo = async (id) => {
   const res = await axios.get(
-    `https://anime-ten-nu.vercel.app/meta/anilist/info/${id}`
+    `https://anime-lyevans-projects.vercel.app/meta/anilist/info/${id}?provider=animepahe`
   );
   return res.data;
 };
 
 const getTrendingAnime = async () => {
   const res = await axios.get(
-    `https://anime-ten-nu.vercel.app/meta/anilist/trending?perPage=10`
+    `https://anime-lyevans-projects.vercel.app/meta/anilist/trending?perPage=10`
   );
   return res.data.results;
 };
@@ -56,6 +56,25 @@ const watchAnime = async (id, resolution, selectedServer) => {
   return anime;
 };
 
+const getStreamUrl = async (id) => {
+  try {
+    const res = await axios.get(
+      `https://anime-lyevans-projects.vercel.app/anime/animepahe/watch?episodeId=${id}`
+    );
+
+    // Optionally check if response is valid
+    if (!res.data || !res.data.sources) {
+      throw new Error("No sources found for this episode.");
+    }
+
+    console.log(res.data.sources);
+    return res.data.sources; // return array of available stream sources
+  } catch (error) {
+    console.error("Failed to fetch stream URL:", error);
+    return []; // return empty array on failure
+  }
+};
+
 const parseM3U8 = (m3u8Text) => {
   const lines = m3u8Text.split("\n");
   const result = [];
@@ -75,4 +94,10 @@ const parseM3U8 = (m3u8Text) => {
   return result;
 };
 
-export { searchAnime, getAnimeInfo, getTrendingAnime, watchAnime };
+export {
+  searchAnime,
+  getAnimeInfo,
+  getTrendingAnime,
+  watchAnime,
+  getStreamUrl,
+};

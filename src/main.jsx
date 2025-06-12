@@ -7,7 +7,9 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import AnimeInfo from "./pages/AnimeInfo";
 import WatchAnime from "./pages/WatchAnime";
+import SearchAnime from "./pages/SearchAnime";
 import Authentication from "./pages/Authentication";
+import VideoPlayer from "./components/VideoPlayer";
 
 const router = createBrowserRouter([
   {
@@ -27,8 +29,16 @@ const router = createBrowserRouter([
         element: <AnimeInfo />,
       },
       {
+        path: "search/:query",
+        element: <SearchAnime />,
+      },
+      {
         path: "watch/:episodeID",
         element: <WatchAnime />,
+      },
+      {
+        path: "player/:id",
+        element: <VideoPlayer />,
       },
     ],
   },

@@ -3,6 +3,7 @@
   src: url("../src/assets/SquadaOne-Regular.ttf");
 }
 @import "tailwindcss";
+@import "@vidstack/react/player/styles/base.css";
 
 @theme {
   --color-primary: #1dcd9f;

@@ -3,6 +3,8 @@ import { getTrendingAnime } from "../utils/GetAnime";
 import Loader from "../utils/Loader";
 import Scroller from "../utils/Scroller";
 import clsx from "clsx";
+import { MediaPlayer, MediaProvider } from "@vidstack/react";
+import { Link } from "react-router";
 
 const TrendingAnime = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -43,7 +45,11 @@ const TrendingAnime = () => {
   }, [trending.length, view]);
 
   if (trending.length === 0) {
-    return <Loader />;
+    return (
+      <div className="flex flex-1 flex-col h-screen justify-center items-center">
+        <Loader />
+      </div>
+    );
   }
 
   const currentAnime = trending[currentIndex];
@@ -108,15 +114,18 @@ const TrendingAnime = () => {
             </div>
           </div>
           <div className="absolute right-1/12 bottom-1/12 flex flex-row justify-between items-center gap-6 w-1/3 font-squada">
-            <p className="text-white text-3xl bg-primary border-3 border-primary p-4 rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
-              <i className="fa fa-play text-white"></i> Watch Anime
-            </p>
+            <Link to={`/anime/${currentAnime.id}`}>
+              <p className="text-white text-3xl bg-primary border-3 border-primary p-4 rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
+                <i className="fa fa-play text-white"></i> Watch Anime
+              </p>
+            </Link>
             <p className="text-white text-3xl border-3 border-primary p-4 rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
               <i className="fa fa-plus text-primary"></i> Add to list
             </p>
           </div>
         </div>
       </div>
+
       <div className="absolute bottom-0 ml-6 mb-4 flex flex-row gap-6 z-30 w-1/2 justify-center">
         {trending.map((anime, index) => {
           return (
