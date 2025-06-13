@@ -71,7 +71,7 @@ const TrendingAnime = () => {
           className="w-full h-[50rem] object-cover"
         />
         <div className="flex flex-row justify-center items-center w-screen">
-          <div className="absolute lg:w-1/2 lg:ml-6 sm:w-full top-1/6 left-0 right-0 p-4  h-[28rem] text-white font-squada bg-background/20 border border-white/20 backdrop-blur-xs shadow-md rounded-lg shadow-background">
+          <div className="absolute lg:w-1/2 lg:ml-6 sm:w-full md:w-full top-1/6 left-0 right-0 p-4  h-[28rem] text-white font-squada bg-background/20 border border-white/20 backdrop-blur-xs shadow-md rounded-lg shadow-background">
             <h2 className="text-6xl font-bold text-shadow-primary text-shadow-md mb-2 line-clamp-2">
               {currentAnime.title?.english || currentAnime.title?.romaji}
             </h2>
