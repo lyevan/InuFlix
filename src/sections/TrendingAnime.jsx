@@ -42,7 +42,7 @@ const TrendingAnime = () => {
       clearInterval(interval);
       clearTimeout(fadeTimeout);
     };
-  }, [trending.length, view]);
+  }, [trending.length, view, currentIndex]);
 
   if (trending.length === 0) {
     return (
@@ -55,7 +55,7 @@ const TrendingAnime = () => {
   const currentAnime = trending[currentIndex];
 
   return (
-    <div className="relative max-h-[56rem] w-screen overflow-hidden">
+    <div className="relative max-h-[60rem] w-screen overflow-hidden">
       <div
         className={clsx(
           "transition-opacity duration-700 ease-in-out relative w-full overflow-hidden",
@@ -71,10 +71,20 @@ const TrendingAnime = () => {
           className="w-full h-[50rem] object-cover"
         />
         <div className="flex flex-row justify-center items-center w-screen">
-          <div className="absolute w-1/2 top-1/6 left-0 right-0 p-4 ml-6 h-[25rem] text-white font-squada bg-background/20 border border-white/20 backdrop-blur-xs shadow-md rounded-lg shadow-background">
+          <div className="absolute w-1/2 top-1/6 left-0 right-0 p-4 ml-6 h-[28rem] text-white font-squada bg-background/20 border border-white/20 backdrop-blur-xs shadow-md rounded-lg shadow-background">
             <h2 className="text-6xl font-bold text-shadow-primary text-shadow-md mb-2 line-clamp-2">
               {currentAnime.title?.english || currentAnime.title?.romaji}
             </h2>
+            <div className="flex flex-row items-center gap-4 w-1/2 font-squada my-7">
+              <Link to={`/anime/${currentAnime.id}`}>
+                <p className="text-white text-xl bg-primary border-3 w-40 h-6 text-center gap-2 items-center flex justify-center border-primary p-4 rounded-xl cursor-pointer">
+                  <i className="fa fa-play text-white"></i> Watch
+                </p>
+              </Link>
+              <p className="text-white text-xl border-3 border-primary w-40 p-4 h-6 text-center gap-2 items-center flex justify-center rounded-xl cursor-pointer">
+                <i className="fa fa-plus text-primary"></i> Save
+              </p>
+            </div>
             <p className="text-xl mb-3">
               <i className="fa fa-star text-yellow-400 mr-3"></i>
               {currentAnime.rating}% of people liked this anime
@@ -82,10 +92,7 @@ const TrendingAnime = () => {
             <div className="flex items-center justify-start gap-2 mb-2 flex-row">
               {currentAnime.genres.map((genre) => {
                 return (
-                  <div
-                    key={genre}
-                    className="bg-primary px-3 py-1 rounded-full"
-                  >
+                  <div key={genre} className="bg-primary px-3 py-1 rounded-xl">
                     <p className="text-lg">{genre}</p>
                   </div>
                 );
@@ -110,16 +117,6 @@ const TrendingAnime = () => {
                 {view ? "View Less" : "View More"}
               </span>
             </div>
-          </div>
-          <div className="absolute left-0 bottom-28 flex flex-row ml-6 justify-around items-center w-1/2 font-squada">
-            <Link to={`/anime/${currentAnime.id}`}>
-              <p className="text-white text-xl bg-primary border-3 w-40 h-6 text-center gap-2 items-center flex justify-center border-primary p-4 rounded-xl cursor-pointer">
-                <i className="fa fa-play text-white"></i> Watch Anime
-              </p>
-            </Link>
-            <p className="text-white text-xl border-3 border-primary w-40 p-4 h-6 text-center gap-2 items-center flex justify-center rounded-xl cursor-pointer">
-              <i className="fa fa-plus text-primary"></i> Add to list
-            </p>
           </div>
         </div>
       </div>
