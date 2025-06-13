@@ -26,7 +26,7 @@ const NavBar = () => {
   return (
     <div
       className={clsx(
-        "box-border flex items-center justify-between w-full h-auto px-12 pt-6 fixed top-0 z-50 transition-all duration-75"
+        "box-border flex items-center justify-between w-full h-auto mb-6 px-12 pt-6 sticky top-0 z-50 transition-all duration-75"
       )}
     >
       {/* Logo */}
@@ -49,8 +49,17 @@ const NavBar = () => {
         </Link>
       </div>
 
+      {/* Burger Menu */}
+      <div>
+        <i
+          className="fa fa-bars text-primary text-3xl cursor-pointer"
+          style={{ fontSize: "3rem" }}
+          aria-hidden="true"
+        ></i>
+      </div>
+
       {/* Search + Profile */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="hidden lg:flex sm:hidden items-center justify-center gap-4">
         <input
           type="text"
           placeholder="Search..."
