@@ -113,11 +113,11 @@ const TrendingAnime = () => {
           </div>
           <div className="absolute left-0 bottom-28 flex flex-row ml-6 justify-around items-center w-1/2 font-squada">
             <Link to={`/anime/${currentAnime.id}`}>
-              <p className="text-white text-3xl bg-primary border-3 w-72 text-center border-primary p-4 rounded-xl cursor-pointer">
+              <p className="text-white text-xl bg-primary border-3 w-40 h-6 text-center gap-2 items-center flex justify-center border-primary p-4 rounded-xl cursor-pointer">
                 <i className="fa fa-play text-white"></i> Watch Anime
               </p>
             </Link>
-            <p className="text-white text-3xl border-3 border-primary w-72 p-4 text-center rounded-xl cursor-pointer">
+            <p className="text-white text-xl border-3 border-primary w-40 p-4 h-6 text-center gap-2 items-center flex justify-center rounded-xl cursor-pointer">
               <i className="fa fa-plus text-primary"></i> Add to list
             </p>
           </div>
