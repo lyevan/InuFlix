@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router"; // make sure you're using `rea
 
 const NavBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [sideBarView, setSideBarView] = useState(false);
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
 
@@ -26,7 +27,7 @@ const NavBar = () => {
   return (
     <div
       className={clsx(
-        "box-border flex items-center justify-between w-full h-auto mb-6 px-3 pt-6 sticky top-0 z-50 transition-all duration-75"
+        "box-border flex items-center justify-between bg-background w-full h-auto px-3 py-6 sticky top-0 z-50 transition-all duration-75 overflow-x-hidden"
       )}
     >
       {/* Logo */}
@@ -35,7 +36,7 @@ const NavBar = () => {
       </Link>
 
       {/* Nav Links */}
-      <div className="hidden sm:hidden md:flex lg:flex items-center justify-center gap-12">
+      <div className="hidden sm:hidden lg:flex items-center justify-center gap-12">
         <Link to="/explore">
           <h1 className="text-light-gray font-poppins font-medium">Explore</h1>
         </Link>
@@ -50,12 +51,53 @@ const NavBar = () => {
       </div>
 
       {/* Burger Menu */}
-      <div>
+      <div
+        className="lg:hidden"
+        onClick={() => {
+          setSideBarView(!sideBarView);
+        }}
+      >
         <i
-          className="fa fa-bars text-primary text-3xl cursor-pointer"
+          className={`fa ${
+            sideBarView ? "fa-close" : "fa-bars"
+          } text-primary text-3xl cursor-pointer transition-all duration-300 ease-in-out transform ${
+            sideBarView
+              ? "rotate-90 scale-110 opacity-80"
+              : "rotate-0 scale-100 opacity-100"
+          }`}
           style={{ fontSize: "2rem" }}
           aria-hidden="true"
         ></i>
+      </div>
+
+      {/* Sidebar */}
+
+      <div
+        className={`lg:hidden rounded-xl fixed z-50 bg-primary shadow-md shadow-background w-1/2 text-background font-poppins right-0 top-22 p-3 mr-3 flex flex-col items-center justify-center transform transition-all duration-300 ease-in-out ${
+          sideBarView
+            ? "translate-x-0 opacity-100"
+            : "translate-x-full opacity-0 invisible pointer-events-none"
+        }`}
+      >
+        <input
+          type="text"
+          placeholder="Search..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={handleKeyPress}
+          className="p-1 pl-4 w-full rounded-2xl border-2 font-poppins border-primary focus:outline-none focus:border-background bg-white text-background"
+        />
+        <ul className="flex flex-col w-full mt-2 gap-2 font-semibold select-none">
+          <li>
+            <i className="fa fa-search mr-3"></i>Explore
+          </li>
+          <li>
+            <i className="fa fa-clock-o mr-3"></i>Recent
+          </li>
+          <li>
+            <i className="fa fa-calendar mr-3"></i>Schedules
+          </li>
+        </ul>
       </div>
 
       {/* Search + Profile */}

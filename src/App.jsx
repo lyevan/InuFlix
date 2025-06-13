@@ -8,7 +8,7 @@ import Scroller from "./utils/Scroller";
 function App() {
   return (
     <>
-      <div className="flex flex-col flex-1 min-w-[320px] w-full min-h-[100vh] h-full bg-background relative overflow-hidden">
+      <div className="flex flex-col flex-1 min-w-[320px] w-full min-h-[100vh] h-full bg-background relative">
         <NavBar />
         <Outlet />
         <div className="flex w-screen justify-center absolute top-[700px]">

@@ -24,7 +24,7 @@ const PopularAnime = () => {
   if (popular.length === 0) {
     return (
       <div className="text-white text-center mt-4">
-        <p>Loading Popular anime...</p>
+        {/* <p>Loading Popular anime...</p> */}
       </div>
     );
   }

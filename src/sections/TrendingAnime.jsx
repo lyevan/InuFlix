@@ -74,7 +74,7 @@ const TrendingAnime = () => {
         </div>
         <section className="mx-3 -translate-y-12 flex flex-col justify-center">
           <h2 className="text-5xl p-1 font-bold text-shadow-primary text-white font-squada text-shadow-md mb-2 line-clamp-2">
-            {currentAnime.title.english}
+            {currentAnime.title.english || currentAnime.title.romaji}
           </h2>
           <div className="text-white text-xl font-squada flex flex-row gap-5 my-3 items-center">
             <Link to={`/anime/${currentAnime.id}`}>
