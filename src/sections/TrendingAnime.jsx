@@ -46,8 +46,9 @@ const TrendingAnime = () => {
 
   if (trending.length === 0) {
     return (
-      <div className="flex flex-1 flex-col h-screen justify-center items-center">
+      <div className="flex flex-1 flex-col h-screen justify-center items-center gap-4">
         <Loader />
+        <p className="font-squada text-white">Loading Trending Animes...</p>
       </div>
     );
   }
@@ -87,17 +88,15 @@ const TrendingAnime = () => {
               <button className="">Save</button>
             </div>
           </div>
-          <p className="flex flex-row gap-2 text-white font-poppins items-center text-lg">
+          <p className="flex flex-row gap-2 text-white font-poppins items-center text-sm">
             <i className="fa fa-star text-primary"></i>
             {currentAnime.rating}% of people like this
           </p>
-          <h1 className="font-squada text-primary text-3xl mt-4">
-            Description
-          </h1>
+          <h1 className="font-squada text-primary text-xl mt-4">Description</h1>
           <div className="overflow-scroll hide-scrollbar max-h-[160px]">
             <p
               className={clsx(
-                "text-shadow-background text-lg font-poppins text-white",
+                "text-shadow-background text-sm font-poppins text-white",
                 view ? "" : "line-clamp-3",
                 ""
               )}
@@ -107,7 +106,7 @@ const TrendingAnime = () => {
             />{" "}
             <span
               onClick={() => setView(!view)}
-              className="text-primary font-poppins text-lg font-bold cursor-pointer hover:underline"
+              className="text-primary font-poppins text-sm font-bold cursor-pointer hover:underline"
             >
               {view ? "View Less" : "View More"}
             </span>

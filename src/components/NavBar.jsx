@@ -26,12 +26,12 @@ const NavBar = () => {
   return (
     <div
       className={clsx(
-        "box-border flex items-center justify-between w-full h-auto mb-6 px-12 pt-6 sticky top-0 z-50 transition-all duration-75"
+        "box-border flex items-center justify-between w-full h-auto mb-6 px-3 pt-6 sticky top-0 z-50 transition-all duration-75"
       )}
     >
       {/* Logo */}
       <Link to="/">
-        <img src={logo} alt="Logo" className="h-12 mr-2" />
+        <img src={logo} alt="Logo" className="h-8 mr-2" />
       </Link>
 
       {/* Nav Links */}
@@ -53,7 +53,7 @@ const NavBar = () => {
       <div>
         <i
           className="fa fa-bars text-primary text-3xl cursor-pointer"
-          style={{ fontSize: "3rem" }}
+          style={{ fontSize: "2rem" }}
           aria-hidden="true"
         ></i>
       </div>
