@@ -52,7 +52,7 @@ const NavBar = () => {
 
       {/* Burger Menu */}
       <div
-        className="lg:hidden"
+        className="lg:hidden z-50"
         onClick={() => {
           setSideBarView(!sideBarView);
         }}
@@ -70,8 +70,17 @@ const NavBar = () => {
         ></i>
       </div>
 
-      {/* Sidebar */}
+      {/* Overlay */}
+      {sideBarView && (
+        <div
+          className={`fixed inset-0 bg-black z-40 transition-opacity duration-300 ${
+            sideBarView ? "opacity-50" : "opacity-0 pointer-events-none"
+          }`}
+          onClick={() => setSideBarView(false)}
+        ></div>
+      )}
 
+      {/* Sidebar */}
       <div
         className={`lg:hidden rounded-xl fixed z-50 bg-primary shadow-md shadow-background w-1/2 text-background font-poppins right-0 top-22 p-3 mr-3 flex flex-col items-center justify-center transform transition-all duration-300 ease-in-out ${
           sideBarView
