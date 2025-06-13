@@ -28,6 +28,13 @@ const getTrendingAnime = async () => {
   return res.data.results;
 };
 
+const getPopularAnime = async () => {
+  const res = await axios.get(
+    `https://anime-lyevans-projects.vercel.app/meta/anilist/popular?perPage=20`
+  );
+  return res.data.results;
+};
+
 const watchAnime = async (id, resolution, selectedServer) => {
   const anime = {
     subtitle: null,
@@ -98,6 +105,7 @@ export {
   searchAnime,
   getAnimeInfo,
   getTrendingAnime,
+  getPopularAnime,
   watchAnime,
   getStreamUrl,
 };

@@ -1,39 +1,40 @@
 import React from "react";
-import { getTrendingAnime } from "../utils/GetAnime";
+import { getPopularAnime } from "../utils/GetAnime";
 import { useState, useEffect, useRef } from "react";
 import { getAnimeInfo } from "../utils/GetAnime";
+import Card from "../components/Card";
 import { Link } from "react-router";
 
 const PopularAnime = () => {
-  const [trending, setTrending] = useState([]);
+  const [popular, setPopular] = useState([]);
 
   useEffect(() => {
-    const fetchTrending = async () => {
+    const fetchPopular = async () => {
       try {
-        const data = await getTrendingAnime();
-        setTrending(data);
+        const data = await getPopularAnime();
+        setPopular(data);
       } catch (err) {
-        console.error("Error fetching trending anime:", err);
+        console.error("Error fetching Popular anime:", err);
       }
     };
 
-    fetchTrending();
+    fetchPopular();
   }, []);
 
-  if (trending.length === 0) {
+  if (popular.length === 0) {
     return (
       <div className="text-white text-center mt-4">
-        <p>Loading trending anime...</p>
+        <p>Loading Popular anime...</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="text-white text-2xl ml-4">Trending Anime</h2>
-      <ul className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-4 ml-4">
-        {trending.map((anime) => (
-          <Link key={anime.id} to={`/info/${anime.id}`}>
+      <h2 className="text-white font-squada text-2xl ml-4">Popular Anime</h2>
+      <ul className="flex flex-row overflow-scroll gap-2 mx-3">
+        {popular.map((anime) => (
+          <Link key={anime.id} to={`/anime/${anime.id}`}>
             <Card anime={anime} />
           </Link>
         ))}
