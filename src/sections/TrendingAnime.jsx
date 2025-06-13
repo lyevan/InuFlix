@@ -84,11 +84,9 @@ const TrendingAnime = () => {
                 return (
                   <div
                     key={genre}
-                    className="bg-primary px-3 py-1 rounded-full shadow-md shadow-background"
+                    className="bg-primary px-3 py-1 rounded-full"
                   >
-                    <p className="text-lg text-shadow-lg text-shadow-background">
-                      {genre}
-                    </p>
+                    <p className="text-lg">{genre}</p>
                   </div>
                 );
               })}
@@ -115,11 +113,11 @@ const TrendingAnime = () => {
           </div>
           <div className="absolute left-0 bottom-28 flex flex-row ml-6 justify-around items-center w-1/2 font-squada">
             <Link to={`/anime/${currentAnime.id}`}>
-              <p className="text-white text-3xl bg-primary border-3 w-72 text-center border-primary p-4 rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
+              <p className="text-white text-3xl bg-primary border-3 w-72 text-center border-primary p-4 rounded-xl cursor-pointer">
                 <i className="fa fa-play text-white"></i> Watch Anime
               </p>
             </Link>
-            <p className="text-white text-3xl border-3 border-primary w-72 p-4 text-center rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
+            <p className="text-white text-3xl border-3 border-primary w-72 p-4 text-center rounded-xl cursor-pointer">
               <i className="fa fa-plus text-primary"></i> Add to list
             </p>
           </div>
