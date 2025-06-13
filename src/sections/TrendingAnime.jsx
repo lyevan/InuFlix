@@ -75,7 +75,7 @@ const TrendingAnime = () => {
             <h2 className="text-6xl font-bold text-shadow-primary text-shadow-md mb-2 line-clamp-2">
               {currentAnime.title?.english || currentAnime.title?.romaji}
             </h2>
-            <p className="text-xl text-shadow-md text-shadow-background mb-3">
+            <p className="text-xl mb-3">
               <i className="fa fa-star text-yellow-400 mr-3"></i>
               {currentAnime.rating}% of people liked this anime
             </p>
@@ -96,7 +96,7 @@ const TrendingAnime = () => {
             <div className="overflow-scroll hide-scrollbar max-h-[160px]">
               <p
                 className={clsx(
-                  "text-shadow-md text-shadow-background text-lg font-poppins",
+                  "text-shadow-background text-lg font-poppins",
                   view ? "" : "line-clamp-3",
                   ""
                 )}
@@ -107,7 +107,7 @@ const TrendingAnime = () => {
               />{" "}
               <span
                 onClick={() => setView(!view)}
-                className="text-primary text-lg text-shadow-md text-shadow-background cursor-pointer hover:underline"
+                className="text-primary font-poppins text-lg font-bold cursor-pointer hover:underline"
               >
                 {view ? "View Less" : "View More"}
               </span>
@@ -132,7 +132,7 @@ const TrendingAnime = () => {
             <button
               key={index}
               className={clsx(
-                "rounded-full w-3 h-3 transition-all duration-300",
+                "rounded-full w-2 h-2 transition-all duration-300",
                 index === currentIndex
                   ? "bg-primary scale-150 cursor-default"
                   : "bg-white/50 cursor-pointer"

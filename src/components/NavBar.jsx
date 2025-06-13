@@ -38,13 +38,15 @@ const NavBar = () => {
       {/* Nav Links */}
       <div className="hidden sm:hidden md:flex lg:flex items-center justify-center gap-12">
         <Link to="/explore">
-          <h1 className="text-light-gray font-squada">Explore</h1>
+          <h1 className="text-light-gray font-poppins font-medium">Explore</h1>
         </Link>
         <Link to="/recent">
-          <h1 className="text-light-gray font-squada">Recent</h1>
+          <h1 className="text-light-gray font-poppins font-medium">Recent</h1>
         </Link>
         <Link to="/schedules">
-          <h1 className="text-light-gray font-squada">Schedules</h1>
+          <h1 className="text-light-gray font-poppins font-medium">
+            Schedules
+          </h1>
         </Link>
       </div>
 
