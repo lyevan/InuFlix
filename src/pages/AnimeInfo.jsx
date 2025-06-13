@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getAnimeInfo } from "../utils/GetAnime";
 import { useParams } from "react-router";
 import { Link } from "react-router";
+import Loader from "../utils/Loader";
 
 const AnimeInfo = () => {
   const { id } = useParams();
@@ -20,7 +21,13 @@ const AnimeInfo = () => {
     fetchInfo();
   }, [id]);
 
-  if (!info) return <div className="text-white">Loading...</div>;
+  if (!info)
+    return (
+      <div className="text-white font-squada h-screen w-screen justify-center items-center flex flex-col">
+        <Loader />
+        <p className="mt-4 text-2xl">Loading anime...</p>
+      </div>
+    );
 
   return (
     <div className="font-squada">

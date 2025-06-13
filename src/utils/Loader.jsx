@@ -3,14 +3,13 @@ import styled from "styled-components";
 
 const Loader = () => {
   return (
-    <div className="w-screen h-full flex items-center justify-center">
+    <div className="flex items-center justify-center">
       <StyledWrapper>
         <div className="loader">
           <span className="bar" />
           <span className="bar" />
           <span className="bar" />
         </div>
-
       </StyledWrapper>
     </div>
   );

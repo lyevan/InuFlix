@@ -55,10 +55,10 @@ const TrendingAnime = () => {
   const currentAnime = trending[currentIndex];
 
   return (
-    <div className="relative max-h-[900px] w-screen overflow-hidden">
+    <div className="relative max-h-[56rem] w-screen overflow-hidden">
       <div
         className={clsx(
-          "transition-opacity duration-700 ease-in-out relative w-full overflow-hidden border-2 border-yellow-500",
+          "transition-opacity duration-700 ease-in-out relative w-full overflow-hidden",
           fade ? "opacity-100" : "opacity-0"
         )}
       >
@@ -68,10 +68,10 @@ const TrendingAnime = () => {
           loading="lazy"
           src={currentAnime.cover}
           alt={currentAnime.title?.english || currentAnime.title?.romaji}
-          className="w-full h-[600px] object-cover"
+          className="w-full h-[50rem] object-cover"
         />
         <div className="flex flex-row justify-center items-center w-screen">
-          <div className="absolute w-1/2 top-1/6 left-0 right-0 p-4 ml-6 h-[400px] text-white font-squada bg-background/10 border border-white/20 backdrop-blur-xs shadow-md rounded-lg shadow-background">
+          <div className="absolute w-1/2 top-1/6 left-0 right-0 p-4 ml-6 h-[25rem] text-white font-squada bg-background/20 border border-white/20 backdrop-blur-xs shadow-md rounded-lg shadow-background">
             <h2 className="text-6xl font-bold text-shadow-primary text-shadow-md mb-2 line-clamp-2">
               {currentAnime.title?.english || currentAnime.title?.romaji}
             </h2>
@@ -96,7 +96,7 @@ const TrendingAnime = () => {
             <div className="overflow-scroll hide-scrollbar max-h-[160px]">
               <p
                 className={clsx(
-                  "text-shadow-lg text-shadow-background",
+                  "text-shadow-md text-shadow-background text-lg font-poppins",
                   view ? "" : "line-clamp-3",
                   ""
                 )}
@@ -113,13 +113,13 @@ const TrendingAnime = () => {
               </span>
             </div>
           </div>
-          <div className="absolute right-1/12 bottom-1/12 flex flex-row justify-between items-center gap-6 w-1/3 font-squada">
+          <div className="absolute left-0 bottom-28 flex flex-row ml-6 justify-around items-center w-1/2 font-squada">
             <Link to={`/anime/${currentAnime.id}`}>
-              <p className="text-white text-3xl bg-primary border-3 border-primary p-4 rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
+              <p className="text-white text-3xl bg-primary border-3 w-72 text-center border-primary p-4 rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
                 <i className="fa fa-play text-white"></i> Watch Anime
               </p>
             </Link>
-            <p className="text-white text-3xl border-3 border-primary p-4 rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
+            <p className="text-white text-3xl border-3 border-primary w-72 p-4 text-center rounded-xl cursor-pointer text-shadow-lg text-shadow-background">
               <i className="fa fa-plus text-primary"></i> Add to list
             </p>
           </div>
