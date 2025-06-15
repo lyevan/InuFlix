@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
+import Card from "../components/Card";
 
 // Assume this exists — replace with your actual fetch function
 import { searchAnime } from "../utils/GetAnime"; // <- update path accordingly
@@ -45,14 +46,7 @@ const SearchAnime = () => {
               className="bg-background p-4 rounded shadow text-light-gray"
             >
               <Link to={`/anime/${anime.id}`}>
-                <img
-                  src={anime.image}
-                  alt={anime.title.english}
-                  className="w-full h-48 object-cover rounded mb-2"
-                />
-                <h2 className="font-squada text-xl">
-                  {anime.title.english || anime.title.romaji}
-                </h2>
+                <Card anime={anime} />
               </Link>
             </div>
           ))}
