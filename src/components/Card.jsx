@@ -11,6 +11,7 @@ const Card = ({ anime }) => {
       </h3>
 
       <img
+        loading="eager"
         src={anime.image}
         alt={anime.title.english || anime.title.romaji}
         className="w-30 h-44 lg:w-40 lg:h-60 rounded absolute hover:scale-105 transition-transform duration-300"

@@ -13,12 +13,14 @@ import Card from "./Card";
 
 function VideoPlayer() {
   const { animeId, id, number } = useParams();
-  const navigate = useNavigate();
+
   const videoRef = useRef(null);
   const playerRef = useRef(null);
   const [sources, setSources] = useState([]);
   const [info, setInfo] = useState([]);
   const [search, setSearch] = useState("");
+  const [skipTimes, setSkipTimes] = useState([]);
+  const [autoSkip, setAutoSkip] = useState(true);
 
   const filteredEpisodes = (info?.episodes || []).filter((ep) =>
     ep.number.toString().includes(search)
@@ -75,6 +77,52 @@ function VideoPlayer() {
   }, [id]);
 
   useEffect(() => {
+    const fetchSkipTimes = async () => {
+      try {
+        // Find the episode's local index in the array
+        const localIndex = info?.episodes?.findIndex(
+          (ep) => String(ep.number) === number
+        );
+
+        // If not found, default to 1 (fail-safe)
+        const seasonEpNumber = localIndex >= 0 ? localIndex + 1 : 1;
+
+        const res = await fetch(
+          `https://api.aniskip.com/v1/skip-times/${info?.malId}/${seasonEpNumber}?types=op&types=ed`
+        );
+
+        const data = await res.json();
+        if (data.found) setSkipTimes(data.results);
+      } catch (err) {
+        console.error("Error fetching skip times:", err);
+      }
+    };
+
+    if (info?.malId && info?.episodes?.length) {
+      fetchSkipTimes();
+    }
+  }, [info?.malId, info?.episodes, number]);
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player || skipTimes.length === 0 || !autoSkip) return;
+
+    const checkSkip = () => {
+      const current = player.currentTime();
+      for (const s of skipTimes) {
+        const { start_time, end_time } = s.interval;
+        if (current >= start_time && current < end_time) {
+          player.currentTime(end_time);
+          break;
+        }
+      }
+    };
+
+    const interval = setInterval(checkSkip, 500);
+    return () => clearInterval(interval);
+  }, [skipTimes, autoSkip]);
+
+  useEffect(() => {
     if (!sources.length || !videoRef.current) return;
 
     const player = videojs(videoRef.current, {
@@ -116,6 +164,8 @@ function VideoPlayer() {
         />
       </div>
 
+      <div className="flex justify-center mt-2"></div>
+
       {/* Buttons */}
       <div className="flex flex-row w-full justify-between mt-4 font-poppins text-xs">
         {/* Prev Button */}
@@ -134,6 +184,15 @@ function VideoPlayer() {
           }}
         >
           <i className="fa fa-step-backward mr-1" aria-hidden="true"></i>Prev
+        </button>
+
+        <button
+          onClick={() => setAutoSkip((prev) => !prev)}
+          className={`px-4 py-1 rounded font-poppins text-sm ${
+            autoSkip ? "bg-primary" : "bg-gray-600"
+          } text-white`}
+        >
+          Auto Skip OP and ED: {autoSkip ? "ON" : "OFF"}
         </button>
 
         {/* Next Button */}
@@ -186,6 +245,7 @@ function VideoPlayer() {
                 <div className="bg-primary flex justify-center items-center relative w-full h-full rounded-md overflow-hidden">
                   <img
                     src={ep.image}
+                    loading="lazy"
                     alt={`Episode ${ep.number}`}
                     referrerPolicy="no-referrer"
                     className="object-cover w-full h-full"
@@ -218,6 +278,7 @@ function VideoPlayer() {
       </section>
 
       {/* Related Anime */}
+      <p>{info?.malId}</p>
       <section>
         <div>
           <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2 mt-4">

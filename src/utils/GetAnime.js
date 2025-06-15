@@ -38,6 +38,13 @@ const getAiringAnime = async (page = 1) => {
   return res.data.results;
 };
 
+const getSkipTime = async (malId, number) => {
+  const res = await axios.get(
+    `https://api.aniskip.com/v1/skip-times/${malId}/${number}?types=op&types=ed`
+  );
+  return res.data.results;
+};
+
 const watchAnime = async (id, resolution, selectedServer) => {
   const anime = {
     subtitle: null,

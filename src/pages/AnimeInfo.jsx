@@ -47,7 +47,7 @@ const AnimeInfo = () => {
           className="w-30 h-auto rounded-2xl"
         />
         <div className="rounded-2xl border border-primary w-full">
-          {info.trailer.id ? (
+          {info?.trailer?.id ? (
             <iframe
               className="w-full h-44 rounded-2xl"
               src={`https://www.youtube.com/embed/${info.trailer.id}`}
