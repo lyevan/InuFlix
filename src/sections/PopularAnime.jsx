@@ -31,10 +31,12 @@ const PopularAnime = () => {
 
   return (
     <div>
-      <h2 className="text-white font-squada text-2xl ml-4">Popular Anime</h2>
-      <ul className="flex flex-row overflow-scroll gap-2 mx-3">
+      <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2 ml-4">
+        Popular Anime
+      </h2>
+      <ul className="flex flex-row lg:grid lg:w-[55rem] lg:gap-3 lg:place-items-center lg:grid-cols-5 lg:overflow-visible overflow-scroll gap-2 mx-3 lg:place-content-start">
         {popular.map((anime) => (
-          <Link key={anime.id} to={`/anime/${anime.id}`}>
+          <Link key={anime.id} to={`/anime/${anime.id}`} className="lg:w-40">
             <Card anime={anime} />
           </Link>
         ))}

@@ -69,7 +69,7 @@ const TrendingAnime = () => {
             loading="lazy"
             src={currentAnime.cover}
             alt="Anime Cover"
-            className="object-cover w-full h-[12rem] rounded-xl"
+            className="object-cover w-full h-[12rem] lg:h-[30rem] rounded-xl"
           />
         </div>
         <section className="mx-3 -translate-y-12 flex flex-col justify-center">

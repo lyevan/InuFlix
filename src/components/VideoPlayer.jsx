@@ -83,7 +83,7 @@ function VideoPlayer() {
   }, [sources]);
 
   return (
-    <div className="w-1/2 h-1/2">
+    <div className="w-full h-full px-3 mt-3">
       <div data-vjs-player>
         <video
           ref={videoRef}
