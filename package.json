@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.8",
+    "@videojs/themes": "^1.0.1",
     "@vidstack/react": "^1.12.13",
     "axios": "^1.9.0",
     "clsx": "^2.1.1",

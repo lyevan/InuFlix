@@ -37,7 +37,7 @@ const router = createBrowserRouter([
         element: <WatchAnime />,
       },
       {
-        path: "player/:id",
+        path: "player/:animeId/:id/:number",
         element: <VideoPlayer />,
       },
     ],

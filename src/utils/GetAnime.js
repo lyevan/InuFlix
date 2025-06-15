@@ -1,36 +1,39 @@
 import axios from "axios";
 
+const API_URL = "https://anime-ten-nu.vercel.app";
+
 const searchAnime = async (query) => {
-  const res = await axios.get(
-    `https://anime-ten-nu.vercel.app/meta/anilist/${query}`
-  );
+  const res = await axios.get(`${API_URL}/meta/anilist/${query}`);
   return res.data.results;
 };
 
 const getRandomAnime = async () => {
-  const res = await axios.get(
-    `https://anime-ten-nu.vercel.app/meta/anilist/random`
-  );
+  const res = await axios.get(`${API_URL}/meta/anilist/random`);
   return res.data;
 };
 
 const getAnimeInfo = async (id) => {
   const res = await axios.get(
-    `https://anime-lyevans-projects.vercel.app/meta/anilist/info/${id}?provider=animepahe`
+    `${API_URL}/meta/anilist/info/${id}?provider=animepahe`
   );
   return res.data;
 };
 
 const getTrendingAnime = async () => {
+  const res = await axios.get(`${API_URL}/meta/anilist/trending?perPage=10`);
+  return res.data.results;
+};
+
+const getPopularAnime = async (page = 1) => {
   const res = await axios.get(
-    `https://anime-lyevans-projects.vercel.app/meta/anilist/trending?perPage=10`
+    `${API_URL}/meta/anilist/popular?page=${page}&perPage=20`
   );
   return res.data.results;
 };
 
-const getPopularAnime = async () => {
+const getAiringAnime = async (page = 1) => {
   const res = await axios.get(
-    `https://anime-lyevans-projects.vercel.app/meta/anilist/popular?perPage=20`
+    `${API_URL}/meta/anilist/airing-schedule?page=${page}&perPage=20&notYetAired=true`
   );
   return res.data.results;
 };
@@ -42,7 +45,7 @@ const watchAnime = async (id, resolution, selectedServer) => {
     m3u8Result: null,
   };
   const res = await axios.get(
-    `https://anime-ten-nu.vercel.app/anime/zoro/watch/${id}server=${selectedServer}`
+    `${API_URL}/anime/zoro/watch/${id}server=${selectedServer}`
   );
   const m3u8Url = res.data.sources[0].url;
   const engSub = res.data.subtitles.find((sub) => sub.lang === "English");
@@ -66,7 +69,7 @@ const watchAnime = async (id, resolution, selectedServer) => {
 const getStreamUrl = async (id) => {
   try {
     const res = await axios.get(
-      `https://anime-lyevans-projects.vercel.app/anime/animepahe/watch?episodeId=${id}`
+      `${API_URL}/anime/animepahe/watch?episodeId=${id}`
     );
 
     // Optionally check if response is valid
@@ -108,4 +111,5 @@ export {
   getPopularAnime,
   watchAnime,
   getStreamUrl,
+  getAiringAnime,
 };

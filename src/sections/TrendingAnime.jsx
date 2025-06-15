@@ -57,6 +57,9 @@ const TrendingAnime = () => {
 
   return (
     <div className="mx-3 relative">
+      <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2">
+        Trending Anime
+      </h2>
       <div
         className={clsx(
           "transition-opacity duration-700 ease-in-out relative w-full overflow-hidden",
@@ -72,8 +75,8 @@ const TrendingAnime = () => {
             className="object-cover w-full h-[12rem] lg:h-[30rem] rounded-xl"
           />
         </div>
-        <section className="mx-3 -translate-y-12 flex flex-col justify-center">
-          <h2 className="text-5xl p-1 font-bold text-shadow-primary text-white font-squada text-shadow-md mb-2 line-clamp-2">
+        <section className="-translate-y-16 flex flex-col justify-center">
+          <h2 className="text-4xl p-1 font-bold text-shadow-primary flex items-center text-white font-squada text-shadow-md mb-2 h-22 line-clamp-2">
             {currentAnime.title.english || currentAnime.title.romaji}
           </h2>
           <div className="text-white text-xl font-squada flex flex-row gap-5 my-3 items-center">
@@ -84,15 +87,19 @@ const TrendingAnime = () => {
               </div>
             </Link>
             <div className="flex flex-row justify-center items-center gap-1 p-3 rounded-2xl border-2 border-primary ">
-              <i className="fa fa-plus"></i>
+              <i className="fa fa-plus text-primary"></i>
               <button className="">Save</button>
             </div>
           </div>
           <p className="flex flex-row gap-2 text-white font-poppins items-center text-sm">
             <i className="fa fa-star text-primary"></i>
-            {currentAnime.rating}% of people like this
+            {currentAnime.rating
+              ? `${currentAnime.rating}% of people like this`
+              : `No ratings yet`}
           </p>
-          <h1 className="font-squada text-primary text-xl mt-4">Description</h1>
+          <h1 className="font-squada text-primary text-2xl mt-2">
+            Description
+          </h1>
           <div className="overflow-scroll hide-scrollbar max-h-[160px]">
             <p
               className={clsx(

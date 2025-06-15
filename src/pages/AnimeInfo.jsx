@@ -44,7 +44,9 @@ const AnimeInfo = () => {
       <ul className="text-bg font-squada text-2xl grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 m-4">
         {info.episodes.map((ep) => (
           <div key={ep.id}>
-            <Link to={`/player/${encodeURIComponent(ep.id)}`}>
+            <Link
+              to={`/player/${id}/${encodeURIComponent(ep.id)}/${ep.number}`}
+            >
               <div className="bg-primary flex justify-center items-center relative">
                 <img
                   src={ep.image}
