@@ -10,6 +10,7 @@ videojs.registerPlugin("httpSourceSelector", httpSourceSelector);
 import { getStreamUrl, getAnimeInfo } from "../utils/GetAnime";
 import Loader from "../utils/Loader";
 import Card from "./Card";
+import { preload } from "react-dom";
 
 function VideoPlayer() {
   const { animeId, id, number } = useParams();
@@ -79,12 +80,11 @@ function VideoPlayer() {
   useEffect(() => {
     const fetchSkipTimes = async () => {
       try {
-        // Find the episode's local index in the array
-        const localIndex = info?.episodes?.findIndex(
+        const episodes = info?.episodes || [];
+        const localIndex = episodes.findIndex(
           (ep) => String(ep.number) === number
         );
 
-        // If not found, default to 1 (fail-safe)
         const seasonEpNumber = localIndex >= 0 ? localIndex + 1 : 1;
 
         const res = await fetch(
@@ -92,7 +92,19 @@ function VideoPlayer() {
         );
 
         const data = await res.json();
-        if (data.found) setSkipTimes(data.results);
+
+        if (data.found) {
+          let skips = data.results;
+          console.log(localIndex + 1, episodes.length);
+          // 🛑 If it's the last episode, remove ED skips
+          if (localIndex + 1 === episodes.length) {
+            skips = skips.filter((s) => s.skip_type !== "ed");
+          }
+
+          console.log(skips);
+
+          setSkipTimes(skips);
+        }
       } catch (err) {
         console.error("Error fetching skip times:", err);
       }
@@ -123,7 +135,7 @@ function VideoPlayer() {
   }, [skipTimes, autoSkip]);
 
   useEffect(() => {
-    if (!sources.length || !videoRef.current) return;
+    if (!sources.length || !videoRef.current || !info?.episodes?.length) return;
 
     const player = videojs(videoRef.current, {
       autoplay: true,
@@ -131,6 +143,12 @@ function VideoPlayer() {
       responsive: true,
       fluid: true,
       sources,
+      controlBar: {
+        skipButtons: {
+          forward: 10, // valid: 5 | 10 | 30
+          backward: 10, // valid: 5 | 10 | 30
+        },
+      },
       plugins: {
         httpSourceSelector: { default: "1080p" },
       },
@@ -139,12 +157,25 @@ function VideoPlayer() {
     player.httpSourceSelector();
     playerRef.current = player;
 
+    player.on("ended", () => {
+      const currentIndex = info.episodes.findIndex(
+        (ep) => String(ep.number) === number
+      );
+      const nextEp = info.episodes[currentIndex + 1];
+
+      if (nextEp) {
+        window.location.href = `/player/${animeId}/${encodeURIComponent(
+          nextEp.id
+        )}/${nextEp.number}`;
+      }
+    });
+
     return () => {
       if (playerRef.current) {
         playerRef.current.dispose();
       }
     };
-  }, [sources]);
+  }, [sources, info, number, animeId]);
 
   return (
     <div className="w-full h-full px-3 mt-3 lg:w-1/2 lg:h-auto">
@@ -160,7 +191,8 @@ function VideoPlayer() {
       >
         <video
           ref={videoRef}
-          className="video-js vjs-theme-fantasy vjs-layout-big w-full h-full"
+          preload="auto"
+          className="video-js vjs-default-skin vjs-layout-small w-full h-full"
         />
       </div>
 
@@ -214,8 +246,8 @@ function VideoPlayer() {
         </button>
       </div>
 
-      {/* Episodes */}
       <section className="mt-4">
+        {/* Episodes */}
         <div className="flex flex-row justify-between items-center">
           <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2">
             Episodes
@@ -278,7 +310,7 @@ function VideoPlayer() {
       </section>
 
       {/* Related Anime */}
-      <p>{info?.malId}</p>
+
       <section>
         <div>
           <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2 mt-4">

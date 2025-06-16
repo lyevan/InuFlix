@@ -7,10 +7,14 @@ import Loader from "../utils/Loader";
 const AnimeInfo = () => {
   const { id } = useParams();
   const [info, setInfo] = useState(null);
+  const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("desc");
 
-  const trailer = (site, id) => {
-    return `https://www.${site}.com/watch?v=${id}`;
-  };
+  const filteredEpisodes = (info?.episodes || [])
+    .filter((ep) => ep.number.toString().includes(search))
+    .sort((a, b) =>
+      sortOrder === "asc" ? a.number - b.number : b.number - a.number
+    );
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -44,9 +48,9 @@ const AnimeInfo = () => {
         <img
           src={info.image}
           alt={info.title.romaji}
-          className="w-30 h-auto rounded-2xl"
+          className="w-30 h-auto rounded-3xl"
         />
-        <div className="rounded-2xl border border-primary w-full">
+        <div className="rounded-2xl border border-primary w-full flex justify-center items-center">
           {info?.trailer?.id ? (
             <iframe
               className="w-full h-44 rounded-2xl"
@@ -56,9 +60,11 @@ const AnimeInfo = () => {
               allowFullScreen
             ></iframe>
           ) : (
-            <p className="font-poppins text-xs text-white">
-              No trailer available for this anime
-            </p>
+            <div>
+              <p className="font-poppins text-xs text-white">
+                No trailer available for this anime
+              </p>
+            </div>
           )}
         </div>
       </section>
@@ -93,27 +99,52 @@ const AnimeInfo = () => {
       </section>
 
       {/* Anime Episodes */}
-      <p className="text-primary text-3xl">Episodes</p>
+      <div className="flex flex-row justify-between items-center">
+        <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2">
+          Episodes
+        </h2>
+
+        <div className="flex flex-row justify-center items-center">
+          <p className="mr-2 font-poppins text-white text-xs">EP #:</p>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="border text-white font-poppins border-white w-16 focus:border-primary rounded-lg placeholder:text-xs text-center"
+            placeholder="eg. 25"
+          />
+        </div>
+        <button
+          onClick={() =>
+            setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+          }
+          className="ml-4 text-xs text-primary border border-primary rounded px-2 w-18 py-1 hover:bg-primary hover:text-bg transition"
+        >
+          {sortOrder === "asc" ? "Old First ⬆" : "New First ⬇"}
+        </button>
+      </div>
       <ul className="text-bg font-squada text-2xl grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {info.episodes.map((ep) => (
-          <div key={ep.id}>
-            <Link
-              to={`/player/${id}/${encodeURIComponent(ep.id)}/${ep.number}`}
-            >
-              <div className="flex justify-center items-center relative ">
-                <img
-                  src={ep.image}
-                  alt={ep.number}
-                  referrerPolicy="no-referrer"
-                  className="rounded"
-                />
-                <p className="absolute top-0 left-0 bg-primary rounded-br rounded-tl text-sm w-10 text-center">
-                  {ep.number}
-                </p>
-              </div>
-            </Link>
-          </div>
-        ))}
+        {(filteredEpisodes.length > 0 ? filteredEpisodes : info.episodes).map(
+          (ep) => (
+            <div key={ep.id}>
+              <Link
+                to={`/player/${id}/${encodeURIComponent(ep.id)}/${ep.number}`}
+              >
+                <div className="flex justify-center items-center relative ">
+                  <img
+                    src={ep.image}
+                    alt={ep.number}
+                    referrerPolicy="no-referrer"
+                    className="rounded"
+                  />
+                  <p className="absolute top-0 left-0 bg-primary rounded-br rounded-tl text-sm w-10 text-center">
+                    {ep.number}
+                  </p>
+                </div>
+              </Link>
+            </div>
+          )
+        )}
       </ul>
     </div>
   );
