@@ -10,7 +10,6 @@ videojs.registerPlugin("httpSourceSelector", httpSourceSelector);
 import { getStreamUrl, getAnimeInfo } from "../utils/GetAnime";
 import Loader from "../utils/Loader";
 import Card from "./Card";
-import { preload } from "react-dom";
 
 function VideoPlayer() {
   const { animeId, id, number } = useParams();
