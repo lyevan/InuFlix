@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAnimeInfo } from "../utils/GetAnime";
+import { getAnimeInfo, getEpisodesFromAnilistId } from "../utils/GetAnime";
 import { useParams } from "react-router";
 import { Link } from "react-router";
 import Loader from "../utils/Loader";
@@ -9,12 +9,37 @@ const AnimeInfo = () => {
   const [info, setInfo] = useState(null);
   const [search, setSearch] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
+  const [animepaheEps, setAnimepaheEps] = useState(null);
+  const [title, setTitle] = useState("");
 
-  const filteredEpisodes = (info?.episodes || [])
+  const filteredEpisodes = (animepaheEps || [])
     .filter((ep) => ep.number.toString().includes(search))
     .sort((a, b) =>
       sortOrder === "asc" ? a.number - b.number : b.number - a.number
     );
+
+  useEffect(() => {
+    const fetchAnimepaheEps = async () => {
+      if (!title) return;
+
+      try {
+        const episodes = await getEpisodesFromAnilistId(id, title);
+        setAnimepaheEps(episodes);
+      } catch (err) {
+        console.error("Error fetching Animepahe episodes:", err);
+      }
+    };
+
+    fetchAnimepaheEps();
+  }, [id, title]);
+
+  useEffect(() => {
+    if (info) setTitle(info.title.english || info.title.romaji);
+  }, [info]);
+
+  useEffect(() => {
+    if (animepaheEps) console.log("Resolved animepaheId:", animepaheEps);
+  }, [animepaheEps]);
 
   useEffect(() => {
     const fetchInfo = async () => {
@@ -123,29 +148,31 @@ const AnimeInfo = () => {
           {sortOrder === "asc" ? "Old First ⬆" : "New First ⬇"}
         </button>
       </div>
-      <ul className="text-bg font-squada text-2xl grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        {(filteredEpisodes.length > 0 ? filteredEpisodes : info.episodes).map(
-          (ep) => (
-            <div key={ep.id}>
-              <Link
-                to={`/player/${id}/${encodeURIComponent(ep.id)}/${ep.number}`}
-              >
-                <div className="flex justify-center items-center relative ">
-                  <img
-                    src={ep.image}
-                    alt={ep.number}
-                    referrerPolicy="no-referrer"
-                    className="rounded"
-                  />
-                  <p className="absolute top-0 left-0 bg-primary rounded-br rounded-tl text-sm w-10 text-center">
-                    {ep.number}
-                  </p>
-                </div>
-              </Link>
-            </div>
-          )
-        )}
-      </ul>
+      {animepaheEps && (
+        <ul className="text-bg font-squada text-2xl grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {(filteredEpisodes.length > 0 ? filteredEpisodes : animepaheEps).map(
+            (ep) => (
+              <div key={ep.id}>
+                <Link
+                  to={`/player/${id}/${encodeURIComponent(ep.id)}/${ep.number}`}
+                >
+                  <div className="flex justify-center items-center relative ">
+                    <img
+                      src={ep.image}
+                      alt={ep.number}
+                      referrerPolicy="no-referrer"
+                      className="rounded"
+                    />
+                    <p className="absolute top-0 left-0 bg-primary rounded-br rounded-tl text-sm w-10 text-center">
+                      {ep.number}
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            )
+          )}
+        </ul>
+      )}
     </div>
   );
 };

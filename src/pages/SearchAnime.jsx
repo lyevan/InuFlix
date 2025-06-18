@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
-import Card from "../components/Card";
+import ListCard from "../components/ListCard";
 
 // Assume this exists — replace with your actual fetch function
 import { searchAnime } from "../utils/GetAnime"; // <- update path accordingly
@@ -39,14 +39,14 @@ const SearchAnime = () => {
       ) : results.length === 0 ? (
         <p className="text-light-gray">No results found.</p>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-col gap-4">
           {results.map((anime, idx) => (
             <div
               key={idx}
               className="bg-background p-4 rounded shadow text-light-gray"
             >
               <Link to={`/anime/${anime.id}`}>
-                <Card anime={anime} />
+                <ListCard anime={anime} />
               </Link>
             </div>
           ))}

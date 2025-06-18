@@ -7,7 +7,11 @@ import { useNavigate, useParams, Link } from "react-router";
 import httpSourceSelector from "videojs-http-source-selector";
 videojs.registerPlugin("httpSourceSelector", httpSourceSelector);
 
-import { getStreamUrl, getAnimeInfo } from "../utils/GetAnime";
+import {
+  getStreamUrl,
+  getAnimeInfo,
+  getEpisodesFromAnilistId,
+} from "../utils/GetAnime";
 import Loader from "../utils/Loader";
 import Card from "./Card";
 
@@ -21,8 +25,10 @@ function VideoPlayer() {
   const [search, setSearch] = useState("");
   const [skipTimes, setSkipTimes] = useState([]);
   const [autoSkip, setAutoSkip] = useState(true);
+  const [animepaheEps, setAnimepaheEps] = useState(null);
+  const [title, setTitle] = useState("");
 
-  const filteredEpisodes = (info?.episodes || []).filter((ep) =>
+  const filteredEpisodes = (animepaheEps || []).filter((ep) =>
     ep.number.toString().includes(search)
   );
 
@@ -37,6 +43,25 @@ function VideoPlayer() {
     };
     fetchInfo();
   }, [animeId]);
+
+  useEffect(() => {
+    const fetchAnimepaheEps = async () => {
+      if (!title) return;
+
+      try {
+        const episodes = await getEpisodesFromAnilistId(info?.id, title);
+        setAnimepaheEps(episodes);
+      } catch (err) {
+        console.error("Error fetching Animepahe episodes:", err);
+      }
+    };
+
+    fetchAnimepaheEps();
+  }, [info?.id, title]);
+
+  useEffect(() => {
+    if (info) setTitle(info?.title?.english || info?.title?.romaji);
+  }, [info]);
 
   useEffect(() => {
     const setupPlayer = async () => {
@@ -79,7 +104,8 @@ function VideoPlayer() {
   useEffect(() => {
     const fetchSkipTimes = async () => {
       try {
-        const episodes = info?.episodes || [];
+        const episodes = animepaheEps || [];
+
         const localIndex = episodes.findIndex(
           (ep) => String(ep.number) === number
         );
@@ -109,10 +135,10 @@ function VideoPlayer() {
       }
     };
 
-    if (info?.malId && info?.episodes?.length) {
+    if (info?.malId && animepaheEps?.length) {
       fetchSkipTimes();
     }
-  }, [info?.malId, info?.episodes, number]);
+  }, [info?.malId, animepaheEps, number]);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -157,10 +183,10 @@ function VideoPlayer() {
     playerRef.current = player;
 
     player.on("ended", () => {
-      const currentIndex = info.episodes.findIndex(
+      const currentIndex = animepaheEps?.findIndex(
         (ep) => String(ep.number) === number
       );
-      const nextEp = info.episodes[currentIndex + 1];
+      const nextEp = currentIndex !== -1 && animepaheEps[currentIndex + 1];
 
       if (nextEp) {
         window.location.href = `/player/${animeId}/${encodeURIComponent(
@@ -203,14 +229,16 @@ function VideoPlayer() {
         <button
           className="bg-primary p-1 w-16 rounded text-white flex justify-center items-center"
           onClick={() => {
-            const currentIndex = info.episodes.findIndex(
+            const currentIndex = animepaheEps?.findIndex(
               (ep) => String(ep.number) === number
             );
-            const prevEp = info.episodes[currentIndex - 1];
-            if (prevEp) {
-              window.location.href = `/player/${animeId}/${encodeURIComponent(
-                prevEp.id
-              )}/${prevEp.number}`;
+            if (currentIndex > 0) {
+              const prevEp = animepaheEps[currentIndex - 1];
+              if (prevEp) {
+                window.location.href = `/player/${animeId}/${encodeURIComponent(
+                  prevEp.id
+                )}/${prevEp.number}`;
+              }
             }
           }}
         >
@@ -230,14 +258,16 @@ function VideoPlayer() {
         <button
           className="bg-primary p-1 w-16 rounded text-white flex justify-center items-center"
           onClick={() => {
-            const currentIndex = info.episodes.findIndex(
+            const currentIndex = animepaheEps?.findIndex(
               (ep) => String(ep.number) === number
             );
-            const nextEp = info.episodes[currentIndex + 1];
-            if (nextEp) {
-              window.location.href = `/player/${animeId}/${encodeURIComponent(
-                nextEp.id
-              )}/${nextEp.number}`;
+            if (currentIndex !== -1 && currentIndex < animepaheEps.length - 1) {
+              const nextEp = animepaheEps[currentIndex + 1];
+              if (nextEp) {
+                window.location.href = `/player/${animeId}/${encodeURIComponent(
+                  nextEp.id
+                )}/${nextEp.number}`;
+              }
             }
           }}
         >
@@ -263,11 +293,11 @@ function VideoPlayer() {
           </div>
         </div>
 
-        {info?.episodes ? (
+        {animepaheEps ? (
           <ul className="flex flex-row overflow-x-auto gap-3 h-24">
             {(filteredEpisodes.length > 0
               ? filteredEpisodes
-              : info.episodes
+              : animepaheEps
             ).map((ep) => (
               <li
                 key={ep.id}

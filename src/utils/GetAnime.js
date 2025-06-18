@@ -12,6 +12,40 @@ const getRandomAnime = async () => {
   return res.data;
 };
 
+const getEpisodesFromAnilistId = async (anilistId, title) => {
+  try {
+    const res = await fetch(
+      `${API_URL}/anime/animepahe/${encodeURIComponent(title)}`
+    );
+    const data = await res.json();
+
+    const searchResults = data?.results || [];
+
+    for (const result of searchResults) {
+      const infoRes = await fetch(
+        `${API_URL}/anime/animepahe/info/${result.id}`
+      );
+      const infoData = await infoRes.json();
+
+      const externalLinks = infoData?.externalLinks || [];
+
+      const matches = externalLinks.some(
+        (link) =>
+          link.sourceName === "AniList" && link.id === anilistId.toString()
+      );
+
+      if (matches) {
+        return infoData.episodes;
+      }
+    }
+
+    return null; // No match found
+  } catch (error) {
+    console.error("Error resolving AnimePahe ID:", error);
+    return null;
+  }
+};
+
 const getAnimeInfo = async (id) => {
   const res = await axios.get(
     `${API_URL}/meta/anilist/info/${id}?provider=animepahe`
@@ -119,4 +153,5 @@ export {
   watchAnime,
   getStreamUrl,
   getAiringAnime,
+  getEpisodesFromAnilistId,
 };
