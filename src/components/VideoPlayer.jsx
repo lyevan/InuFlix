@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "@videojs/themes/dist/fantasy/index.css";
+import "@videojs/themes/dist/forest/index.css";
 import { useNavigate, useParams, Link } from "react-router";
 
 import httpSourceSelector from "videojs-http-source-selector";
@@ -183,15 +184,19 @@ function VideoPlayer() {
     playerRef.current = player;
 
     player.on("ended", () => {
-      const currentIndex = animepaheEps?.findIndex(
-        (ep) => String(ep.number) === number
-      );
-      const nextEp = currentIndex !== -1 && animepaheEps[currentIndex + 1];
+      console.log("Video ended");
 
-      if (nextEp) {
-        window.location.href = `/player/${animeId}/${encodeURIComponent(
-          nextEp.id
-        )}/${nextEp.number}`;
+      const currentIndex = animepaheEps?.findIndex(
+        (ep) => String(ep?.number) === String(number)
+      );
+      console.log(currentIndex);
+      if (currentIndex !== -1 && currentIndex < animepaheEps?.length - 1) {
+        const nextEp = animepaheEps[currentIndex + 1];
+        if (nextEp?.id && nextEp?.number != null) {
+          window.location.href = `/player/${animeId}/${encodeURIComponent(
+            nextEp?.id
+          )}/${nextEp?.number}`;
+        }
       }
     });
 
@@ -200,7 +205,7 @@ function VideoPlayer() {
         playerRef.current.dispose();
       }
     };
-  }, [sources, info, number, animeId]);
+  }, [sources, animepaheEps, number, animeId]);
 
   return (
     <div className="w-full h-full px-3 mt-3 lg:w-1/2 lg:h-auto">
@@ -217,7 +222,7 @@ function VideoPlayer() {
         <video
           ref={videoRef}
           preload="auto"
-          className="video-js vjs-default-skin vjs-layout-small w-full h-full"
+          className="video-js vjs-theme-fantasy vjs-layout-small w-full h-full"
         />
       </div>
 
