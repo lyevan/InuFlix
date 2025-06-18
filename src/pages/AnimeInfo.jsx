@@ -64,21 +64,23 @@ const AnimeInfo = () => {
 
   return (
     <div className="font-squada mx-3">
-      <p className="text-white text-2xl">{info.title.english}</p>
+      <p className="text-white text-2xl lg:text-5xl lg:text-center lg:mb-6">
+        {info.title.english}
+      </p>
 
       {/* Anime Info */}
 
       {/* Anime Thumbnail and Trailer */}
-      <section className="flex flex-row gap-2 text-white">
+      <section className="flex flex-row text-white w-full justify-center items-center gap-6">
         <img
           src={info.image}
           alt={info.title.romaji}
-          className="w-30 h-auto rounded-3xl"
+          className="w-30 h-auto rounded-3xl lg:w-72 lg:h-fit"
         />
-        <div className="rounded-2xl border border-primary w-full flex justify-center items-center">
+        <div className="rounded-2xl border border-primary w-full flex justify-center items-center lg:w-fit lg:h-auto">
           {info?.trailer?.id ? (
             <iframe
-              className="w-full h-44 rounded-2xl"
+              className="w-full h-44 rounded-2xl lg:aspect-video lg:w-[45rem] lg:h-auto"
               src={`https://www.youtube.com/embed/${info.trailer.id}`}
               title="Anime Trailer"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; full-screen"
@@ -95,7 +97,7 @@ const AnimeInfo = () => {
       </section>
 
       {/* Anime Details */}
-      <section className="text-white font-poppins text-xs my-4">
+      <section className="text-white font-poppins text-xs my-4 lg:text-lg">
         <p>
           Also known as:{" "}
           <span className="text-primary">{info.title.romaji}</span>
@@ -163,7 +165,7 @@ const AnimeInfo = () => {
                       referrerPolicy="no-referrer"
                       className="rounded"
                     />
-                    <p className="absolute top-0 left-0 bg-primary rounded-br rounded-tl text-sm w-10 text-center">
+                    <p className="absolute top-0 left-0 bg-primary rounded-br rounded-tl text-sm lg:text-4xl w-10 text-center">
                       {ep.number}
                     </p>
                   </div>

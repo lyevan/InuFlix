@@ -37,8 +37,25 @@
   display: none;
 }
 
-.vjs-next-button span,
-.vjs-prev-button span {
-  font-size: 14px;
+.vjs-button {
+  display: block !important;
+}
+
+.vjs-next-button i,
+.vjs-prev-button i {
+  font-size: 1rem;
   color: white;
+  cursor: pointer;
+}
+
+.vjs-next-button,
+.vjs-prev-button {
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .vjs-next-button,
+  .vjs-prev-button {
+    display: inline-block !important;
+  }
 }

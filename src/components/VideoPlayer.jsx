@@ -16,6 +16,65 @@ import {
 import Loader from "../utils/Loader";
 import Card from "./Card";
 
+const Button = videojs.getComponent("Button");
+
+class NextButton extends Button {
+  constructor(player, options) {
+    super(player, options);
+    this.controlText("Next ▶");
+    this.on("click", () => {
+      const { animepaheEps, number, animeId, navigate } = options.customProps;
+      const currentIndex = animepaheEps.findIndex(
+        (ep) => String(ep?.number) === String(number)
+      );
+      if (currentIndex !== -1 && currentIndex < animepaheEps.length - 1) {
+        const nextEp = animepaheEps[currentIndex + 1];
+        navigate(
+          `/player/${animeId}/${encodeURIComponent(nextEp.id)}/${nextEp.number}`
+        );
+      }
+    });
+  }
+
+  createEl() {
+    return super.createEl("button", {
+      className:
+        "vjs-control vjs-button vjs-next-button hidden lg:inline-block",
+      innerHTML: '<i class="fa fa-step-forward" aria-hidden="true"></i>',
+    });
+  }
+}
+
+class PrevButton extends Button {
+  constructor(player, options) {
+    super(player, options);
+    this.controlText("◀ Prev");
+    this.on("click", () => {
+      const { animepaheEps, number, animeId, navigate } = options.customProps;
+      const currentIndex = animepaheEps.findIndex(
+        (ep) => String(ep?.number) === String(number)
+      );
+      if (currentIndex > 0) {
+        const prevEp = animepaheEps[currentIndex - 1];
+        navigate(
+          `/player/${animeId}/${encodeURIComponent(prevEp.id)}/${prevEp.number}`
+        );
+      }
+    });
+  }
+
+  createEl() {
+    return super.createEl("button", {
+      className:
+        "vjs-control vjs-button vjs-prev-button hidden lg:inline-block",
+      innerHTML: `<i class="fa fa-step-backward" aria-hidden="true"></i>`,
+    });
+  }
+}
+
+videojs.registerComponent("NextButton", NextButton);
+videojs.registerComponent("PrevButton", PrevButton);
+
 function VideoPlayer() {
   const { animeId, id, number } = useParams();
   const navigate = useNavigate();
@@ -196,6 +255,14 @@ function VideoPlayer() {
       player.httpSourceSelector();
       playerRef.current = player;
 
+      player.getChild("controlBar").addChild("PrevButton", {
+        customProps: { animepaheEps, number, animeId, navigate },
+      });
+
+      player.getChild("controlBar").addChild("NextButton", {
+        customProps: { animepaheEps, number, animeId, navigate },
+      });
+
       // Auto-next logic
       player.on("ended", () => {
         const currentIndex = animepaheEps.findIndex(
@@ -225,143 +292,160 @@ function VideoPlayer() {
   }, [sources, animepaheEps, number, animeId, navigate]);
 
   return (
-    <div className="w-full h-full px-3 mt-3 lg:w-1/2 lg:h-auto">
+    <div className="w-full h-full px-3 mt-3 lg:h-auto">
       <p className="font-squada text-white text-2xl lg:text-4xl mb-2">
         Watching {info?.title?.english || info?.title?.romaji} - Episode{" "}
         {number}
       </p>
-
-      {/* Player */}
-      <div
-        data-vjs-player
-        className="lg:w-1/2 lg:h-auto w-full aspect-w-16 aspect-h-9 mx-auto px-4"
-      >
-        <video
-          key={number}
-          ref={videoRef}
-          preload="auto"
-          className="video-js vjs-theme-fantasy vjs-layout-small w-full h-full"
-        />
-      </div>
-
-      {/* Buttons */}
-      <div className="flex flex-row w-full justify-between mt-4 font-poppins text-xs">
-        {/* Prev Button */}
-        <button
-          className="bg-primary p-1 w-16 rounded text-white flex justify-center items-center"
-          onClick={() => {
-            const currentIndex = animepaheEps?.findIndex(
-              (ep) => String(ep.number) === number
-            );
-            if (currentIndex > 0) {
-              const prevEp = animepaheEps[currentIndex - 1];
-              if (prevEp) {
-                navigate(
-                  `/player/${animeId}/${encodeURIComponent(prevEp.id)}/${
-                    prevEp.number
-                  }`
-                );
-              }
-            }
-          }}
-        >
-          <i className="fa fa-step-backward mr-1" aria-hidden="true"></i>Prev
-        </button>
-
-        <button
-          onClick={() => setAutoSkip((prev) => !prev)}
-          className={`px-4 py-1 rounded font-poppins text-sm ${
-            autoSkip ? "bg-primary" : "bg-gray-600"
-          } text-white`}
-        >
-          Auto Skip OP and ED: {autoSkip ? "ON" : "OFF"}
-        </button>
-
-        {/* Next Button */}
-        <button
-          className="bg-primary p-1 w-16 rounded text-white flex justify-center items-center"
-          onClick={() => {
-            const currentIndex = animepaheEps?.findIndex(
-              (ep) => String(ep.number) === number
-            );
-            if (currentIndex !== -1 && currentIndex < animepaheEps.length - 1) {
-              const nextEp = animepaheEps[currentIndex + 1];
-              if (nextEp) {
-                navigate(
-                  `/player/${animeId}/${encodeURIComponent(nextEp.id)}/${
-                    nextEp.number
-                  }`
-                );
-              }
-            }
-          }}
-        >
-          Next<i className="fa fa-step-forward ml-1" aria-hidden="true"></i>
-        </button>
-      </div>
-
-      <section className="mt-4">
-        {/* Episodes */}
-        <div className="flex flex-row justify-between items-center">
-          <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2">
-            Episodes
-          </h2>
-          <div className="flex flex-row justify-center items-center">
-            <p className="mr-2 font-poppins text-white text-xs">Search ep #:</p>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="border text-white font-poppins border-white w-16 focus:border-primary rounded-lg placeholder:text-xs text-center"
-              placeholder="eg. 25"
-            />
+      <div className="lg:flex lg:flex-row gap-24 lg:h-auto">
+        <section className="w-full">
+          {/* Player */}
+          <div
+            data-vjs-player
+            className="lg:w-1/3 w-full aspect-w-16 aspect-h-9 mx-auto flex justify-center items-center px-4 lg:h-[42rem]"
+          >
+            {!animepaheEps || sources.length === 0 ? (
+              <div className="flex flex-col justify-center items-center">
+                <Loader />
+                <p className="mt-2 font-squada text-white">
+                  Fetching video stream
+                </p>
+              </div>
+            ) : (
+              <video
+                key={number}
+                ref={videoRef}
+                preload="auto"
+                className="video-js vjs-theme-fantasy vjs-layout-small w-full h-full bg-background"
+              />
+            )}
           </div>
-        </div>
+          {/* Buttons */}
+          <div className="flex flex-row w-full justify-between mt-4 font-poppins text-xs">
+            {/* Prev Button */}
+            <button
+              className="bg-primary p-1 w-16 rounded text-white flex justify-center items-center"
+              onClick={() => {
+                const currentIndex = animepaheEps?.findIndex(
+                  (ep) => String(ep.number) === number
+                );
+                if (currentIndex > 0) {
+                  const prevEp = animepaheEps[currentIndex - 1];
+                  if (prevEp) {
+                    navigate(
+                      `/player/${animeId}/${encodeURIComponent(prevEp.id)}/${
+                        prevEp.number
+                      }`
+                    );
+                  }
+                }
+              }}
+            >
+              <i className="fa fa-step-backward mr-1" aria-hidden="true"></i>
+              Prev
+            </button>
 
-        {animepaheEps ? (
-          <ul className="flex flex-row overflow-x-auto gap-3 h-24">
-            {(filteredEpisodes.length > 0
-              ? filteredEpisodes
-              : animepaheEps
-            ).map((ep) => (
-              <li
-                key={ep.id}
-                className="w-[7rem] h-full flex-shrink-0 cursor-pointer"
-              >
-                <div className="bg-primary flex justify-center items-center relative w-full h-full rounded-md overflow-hidden">
-                  <img
-                    src={ep.image}
-                    loading="lazy"
-                    alt={`Episode ${ep.number}`}
-                    referrerPolicy="no-referrer"
-                    className="object-cover w-full h-full"
-                    onClick={() => {
-                      window.location.href = `/player/${animeId}/${encodeURIComponent(
-                        ep.id
-                      )}/${ep.number}`;
-                    }}
-                  />
+            <button
+              onClick={() => setAutoSkip((prev) => !prev)}
+              className={`px-4 py-1 rounded font-poppins text-sm ${
+                autoSkip ? "bg-primary" : "bg-gray-600"
+              } text-white`}
+            >
+              Auto Skip OP and ED: {autoSkip ? "ON" : "OFF"}
+            </button>
 
-                  {String(ep.number) === number && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-sm font-semibold">
-                      <i className="fa fa-play mr-2"></i>Playing
-                    </div>
-                  )}
-
-                  <p className="absolute top-0 left-0 bg-primary text-white text-xs w-10 text-center rounded-br-md">
-                    {ep.number}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div className="flex flex-col justify-center items-center">
-            <Loader />
-            <p className="mt-2 font-squada text-white">Fetching episode list</p>
+            {/* Next Button */}
+            <button
+              className="bg-primary p-1 w-16 rounded text-white flex justify-center items-center"
+              onClick={() => {
+                const currentIndex = animepaheEps?.findIndex(
+                  (ep) => String(ep.number) === number
+                );
+                if (
+                  currentIndex !== -1 &&
+                  currentIndex < animepaheEps.length - 1
+                ) {
+                  const nextEp = animepaheEps[currentIndex + 1];
+                  if (nextEp) {
+                    navigate(
+                      `/player/${animeId}/${encodeURIComponent(nextEp.id)}/${
+                        nextEp.number
+                      }`
+                    );
+                  }
+                }
+              }}
+            >
+              Next<i className="fa fa-step-forward ml-1" aria-hidden="true"></i>
+            </button>
           </div>
-        )}
-      </section>
+        </section>
+
+        <section className="mt-4 lg:min-w-[18rem] lg:w-2/5 lg:mt-0 lg:mr-12">
+          {/* Episodes */}
+          <div className="flex flex-row justify-between items-center">
+            <h2 className="text-white font-squada text-2xl lg:text-4xl mb-2">
+              Episodes
+            </h2>
+            <div className="flex flex-row justify-center items-center">
+              <p className="mr-2 font-poppins text-white text-xs">
+                Search ep #:
+              </p>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="border text-white font-poppins border-white w-16 focus:border-primary rounded-lg placeholder:text-xs text-center"
+                placeholder="eg. 25"
+              />
+            </div>
+          </div>
+
+          {animepaheEps ? (
+            <ul className="gap-3 flex flex-row overflow-x-auto h-24 lg:grid lg:grid-cols-4 lg:max-h-[40rem] lg:h-full lg:overflow-y-auto lg:overflow-x-hidden">
+              {(filteredEpisodes.length > 0
+                ? filteredEpisodes
+                : animepaheEps
+              ).map((ep) => (
+                <li
+                  key={ep.id}
+                  className="w-[7rem] flex-shrink-0 cursor-pointer lg:h-20 lg:w-[7rem]"
+                >
+                  <div className="bg-black flex justify-center items-center relative w-full h-full rounded-md overflow-hidden">
+                    <img
+                      src={ep.image}
+                      loading="lazy"
+                      alt={`Episode ${ep.number}`}
+                      referrerPolicy="no-referrer"
+                      className="object-fit w-full h-32 lg:h-20 lg:w-auto"
+                      onClick={() => {
+                        window.location.href = `/player/${animeId}/${encodeURIComponent(
+                          ep.id
+                        )}/${ep.number}`;
+                      }}
+                    />
+                    {String(ep.number) === number && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-sm font-semibold">
+                        <i className="fa fa-play mr-2"></i>Playing
+                      </div>
+                    )}
+                    <p className="absolute top-0 left-0 bg-primary text-white text-xs w-10 text-center rounded-br-md lg:text-xl lg:font-bold">
+                      {ep.number}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="flex flex-col justify-center items-center">
+              <Loader />
+              <p className="mt-2 font-squada text-white">
+                Fetching episode list
+              </p>
+            </div>
+          )}
+        </section>
+      </div>
 
       {/* Related Anime */}
 
@@ -371,7 +455,7 @@ function VideoPlayer() {
             Related Anime
           </h2>
         </div>
-        <ul className="flex flex-row lg:grid  lg:gap-3 lg:place-items-center lg:grid-cols-5 lg:overflow-visible overflow-scroll gap-2 lg:place-content-start">
+        <ul className="flex flex-row lg:grid  lg:gap-3 lg:place-items-center lg:grid-cols-10 lg:overflow-visible overflow-scroll gap-2 lg:place-content-start">
           {info?.relations?.map((anime) => (
             <li>
               <Link
@@ -393,7 +477,7 @@ function VideoPlayer() {
             Anime you may like
           </h2>
         </div>
-        <ul className="flex flex-row lg:grid  lg:gap-3 lg:place-items-center lg:grid-cols-5 lg:overflow-visible overflow-scroll gap-2 lg:place-content-start">
+        <ul className="flex flex-row lg:grid  lg:gap-3 lg:place-items-center lg:grid-cols-10 lg:overflow-visible overflow-scroll gap-2 lg:place-content-start">
           {info?.recommendations?.map((anime) => (
             <li>
               <Link
