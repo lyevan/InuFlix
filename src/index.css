@@ -36,3 +36,9 @@
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+.vjs-next-button span,
+.vjs-prev-button span {
+  font-size: 14px;
+  color: white;
+}

@@ -1,7 +1,7 @@
-import React from "react";
+import { useParams } from "react-router";
+import VideoPlayer from "../components/VideoPlayer";
 
-const WatchAnime = () => {
-  return <div>WatchAnime</div>;
-};
-
-export default WatchAnime;
+export default function WatchAnime() {
+  const { id } = useParams();
+  return <VideoPlayer key={id} />;
+}

@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider, useParams } from "react-router";
 import "./index.css";
 
 import App from "./App";
@@ -38,7 +38,7 @@ const router = createBrowserRouter([
       },
       {
         path: "player/:animeId/:id/:number",
-        element: <VideoPlayer />,
+        element: <WatchAnime />,
       },
     ],
   },

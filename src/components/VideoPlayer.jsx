@@ -18,6 +18,7 @@ import Card from "./Card";
 
 function VideoPlayer() {
   const { animeId, id, number } = useParams();
+  const navigate = useNavigate();
 
   const videoRef = useRef(null);
   const playerRef = useRef(null);
@@ -161,51 +162,67 @@ function VideoPlayer() {
   }, [skipTimes, autoSkip]);
 
   useEffect(() => {
-    if (!sources.length || !videoRef.current || !info?.episodes?.length) return;
+    if (!sources.length || !videoRef.current || !animepaheEps?.length) return;
 
-    const player = videojs(videoRef.current, {
-      autoplay: true,
-      controls: true,
-      responsive: true,
-      fluid: true,
-      sources,
-      controlBar: {
-        skipButtons: {
-          forward: 10, // valid: 5 | 10 | 30
-          backward: 10, // valid: 5 | 10 | 30
-        },
-      },
-      plugins: {
-        httpSourceSelector: { default: "1080p" },
-      },
-    });
+    // Dispose old player first
+    if (playerRef.current) {
+      playerRef.current.dispose();
+      playerRef.current = null;
+    }
 
-    player.httpSourceSelector();
-    playerRef.current = player;
+    // Delay to allow DOM to finish rendering the new <video> tag
+    const timeout = setTimeout(() => {
+      const videoElement = videoRef.current;
 
-    player.on("ended", () => {
-      console.log("Video ended");
-
-      const currentIndex = animepaheEps?.findIndex(
-        (ep) => String(ep?.number) === String(number)
-      );
-      console.log(currentIndex);
-      if (currentIndex !== -1 && currentIndex < animepaheEps?.length - 1) {
-        const nextEp = animepaheEps[currentIndex + 1];
-        if (nextEp?.id && nextEp?.number != null) {
-          window.location.href = `/player/${animeId}/${encodeURIComponent(
-            nextEp?.id
-          )}/${nextEp?.number}`;
-        }
+      if (!videoElement) {
+        console.warn("videoRef is still null");
+        return;
       }
-    });
+
+      const player = videojs(videoElement, {
+        autoplay: true,
+        controls: true,
+        responsive: true,
+        fluid: true,
+        sources,
+        controlBar: {
+          skipButtons: { forward: 10, backward: 10 },
+        },
+        plugins: {
+          httpSourceSelector: { default: "1080p" },
+        },
+      });
+
+      player.httpSourceSelector();
+      playerRef.current = player;
+
+      // Auto-next logic
+      player.on("ended", () => {
+        const currentIndex = animepaheEps.findIndex(
+          (ep) => String(ep?.number) === String(number)
+        );
+
+        if (currentIndex !== -1 && currentIndex < animepaheEps.length - 1) {
+          const nextEp = animepaheEps[currentIndex + 1];
+          if (nextEp?.id && nextEp?.number != null) {
+            navigate(
+              `/player/${animeId}/${encodeURIComponent(nextEp.id)}/${
+                nextEp.number
+              }`
+            );
+          }
+        }
+      });
+    }, 100); // 100ms delay ensures React finished updating DOM
 
     return () => {
+      clearTimeout(timeout);
       if (playerRef.current) {
         playerRef.current.dispose();
+        playerRef.current = null;
       }
     };
-  }, [sources, animepaheEps, number, animeId]);
+  }, [sources, animepaheEps, number, animeId, navigate]);
 
   return (
     <div className="w-full h-full px-3 mt-3 lg:w-1/2 lg:h-auto">
@@ -220,13 +237,12 @@ function VideoPlayer() {
         className="lg:w-1/2 lg:h-auto w-full aspect-w-16 aspect-h-9 mx-auto px-4"
       >
         <video
+          key={number}
           ref={videoRef}
           preload="auto"
           className="video-js vjs-theme-fantasy vjs-layout-small w-full h-full"
         />
       </div>
-
-      <div className="flex justify-center mt-2"></div>
 
       {/* Buttons */}
       <div className="flex flex-row w-full justify-between mt-4 font-poppins text-xs">
@@ -240,9 +256,11 @@ function VideoPlayer() {
             if (currentIndex > 0) {
               const prevEp = animepaheEps[currentIndex - 1];
               if (prevEp) {
-                window.location.href = `/player/${animeId}/${encodeURIComponent(
-                  prevEp.id
-                )}/${prevEp.number}`;
+                navigate(
+                  `/player/${animeId}/${encodeURIComponent(prevEp.id)}/${
+                    prevEp.number
+                  }`
+                );
               }
             }
           }}
@@ -269,9 +287,11 @@ function VideoPlayer() {
             if (currentIndex !== -1 && currentIndex < animepaheEps.length - 1) {
               const nextEp = animepaheEps[currentIndex + 1];
               if (nextEp) {
-                window.location.href = `/player/${animeId}/${encodeURIComponent(
-                  nextEp.id
-                )}/${nextEp.number}`;
+                navigate(
+                  `/player/${animeId}/${encodeURIComponent(nextEp.id)}/${
+                    nextEp.number
+                  }`
+                );
               }
             }
           }}
