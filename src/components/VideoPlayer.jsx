@@ -85,7 +85,7 @@ function VideoPlayer() {
   const [info, setInfo] = useState([]);
   const [search, setSearch] = useState("");
   const [skipTimes, setSkipTimes] = useState([]);
-  const [autoSkip, setAutoSkip] = useState(true);
+  const [autoSkip, setAutoSkip] = useState(false);
   const [animepaheEps, setAnimepaheEps] = useState(null);
   const [title, setTitle] = useState("");
 
