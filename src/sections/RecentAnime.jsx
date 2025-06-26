@@ -10,7 +10,12 @@ const RecentAnime = () => {
     const fetchRecent = async () => {
       try {
         const data = await getAiringAnime();
-        setRecent(data);
+
+        const filteredData = data.filter(
+          (anime) => !anime.genres.includes("Hentai")
+        );
+
+        setRecent(filteredData);
       } catch (err) {
         console.error("Error fetching recent anime:", err);
       }

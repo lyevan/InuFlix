@@ -16,7 +16,12 @@ const SearchAnime = () => {
       setLoading(true);
       try {
         const data = await searchAnime(decodeURIComponent(query));
-        setResults(data); // assumes array response
+
+        const filteredData = data.filter(
+          (anime) => !anime.genres.includes("Hentai")
+        );
+
+        setResults(filteredData); // assumes array response
       } catch (err) {
         console.error("Search error:", err);
         setResults([]);
