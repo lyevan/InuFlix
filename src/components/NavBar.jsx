@@ -21,6 +21,7 @@ const NavBar = () => {
   const handleKeyPress = (e) => {
     if (e.key === "Enter" && query.trim()) {
       navigate(`/search/${encodeURIComponent(query.trim())}`);
+      setSideBarView(false);
     }
   };
 
@@ -38,15 +39,13 @@ const NavBar = () => {
       {/* Nav Links */}
       <div className="hidden sm:hidden lg:flex items-center justify-center gap-12">
         {/* <Link to="/explore"> */}
-          <h1 className="text-light-gray font-poppins font-medium">Explore</h1>
+        <h1 className="text-light-gray font-poppins font-medium">Explore</h1>
         {/* </Link> */}
         {/* <Link to="/recent"> */}
-          <h1 className="text-light-gray font-poppins font-medium">Recent</h1>
+        <h1 className="text-light-gray font-poppins font-medium">Recent</h1>
         {/* </Link> */}
         {/* <Link to="/schedules"> */}
-          <h1 className="text-light-gray font-poppins font-medium">
-            Schedules
-          </h1>
+        <h1 className="text-light-gray font-poppins font-medium">Schedules</h1>
         {/* </Link> */}
       </div>
 
@@ -120,11 +119,11 @@ const NavBar = () => {
           className="p-1 pl-4 rounded-2xl border-2 font-poppins border-primary focus:outline-none focus:border-light-gray bg-transparent text-light-gray"
         />
         {/* <Link to="/profile"> */}
-          <i
-            className="fa fa-user-circle text-primary text-3xl cursor-pointer pr-2"
-            style={{ fontSize: "2rem" }}
-            aria-hidden="true"
-          ></i>
+        <i
+          className="fa fa-user-circle text-primary text-3xl cursor-pointer pr-2"
+          style={{ fontSize: "2rem" }}
+          aria-hidden="true"
+        ></i>
         {/* </Link> */}
       </div>
     </div>

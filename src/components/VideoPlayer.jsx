@@ -85,13 +85,34 @@ function VideoPlayer() {
   const [info, setInfo] = useState([]);
   const [search, setSearch] = useState("");
   const [skipTimes, setSkipTimes] = useState([]);
-  const [autoSkip, setAutoSkip] = useState(true);
+  const [autoSkip, setAutoSkip] = useState(false);
   const [animepaheEps, setAnimepaheEps] = useState(null);
   const [title, setTitle] = useState("");
 
   const filteredEpisodes = (animepaheEps || []).filter((ep) =>
     ep.number.toString().includes(search)
   );
+
+  const key = "recent-watched-anime";
+  const newEntry = `${animeId}&${id}&${number}`;
+
+  const existing = localStorage.getItem(key);
+
+  if (!existing) {
+    localStorage.setItem(key, JSON.stringify([newEntry]));
+  } else {
+    const animeList = JSON.parse(existing);
+
+    // Check if same animeId already exists
+    const updatedList = animeList.filter(
+      (entry) => entry.split("&")[0] !== animeId
+    );
+
+    // Add the new entry to the top (for most recent first, optional)
+    updatedList.unshift(newEntry);
+
+    localStorage.setItem(key, JSON.stringify(updatedList));
+  }
 
   useEffect(() => {
     const fetchInfo = async () => {
